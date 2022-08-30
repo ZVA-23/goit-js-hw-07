@@ -29,10 +29,10 @@
 
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
-console.log(galleryItems);
+// console.log(galleryItems);
 
 const gallaryList = document.querySelector(".gallery");
-console.log(gallaryList);
+// console.log(gallaryList);
 
 const makeGalleryMarcup = galleryItems
   .map(
@@ -50,3 +50,25 @@ const makeGalleryMarcup = galleryItems
   )
   .join("");
 gallaryList.insertAdjacentHTML("beforeend", makeGalleryMarcup);
+gallaryList.addEventListener("click", showLargeImage);
+
+function showLargeImage(event) {
+  event.preventDefault();
+  if (!event.target.classList.contains("gallery__image")) {
+    return;
+  }
+  const instance = basicLightbox.create(`
+    <img src="${event.target.dataset.source}" width="800" height="600">
+    `);
+  instance.show();
+  if (instance.visible()) {
+    document.addEventListener("keydown", pressEscape);
+  }
+  function pressEscape(event) {
+    if (event.code !== "Escape") {
+      return;
+    }
+    instance.close();
+    document.removeEventListener("keydown", pressEscape);
+  }
+}
